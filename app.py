@@ -29,10 +29,8 @@ def submit():
     cleaned_prompt = raw_prompt.replace("{{", "{").replace("}}", "}")
 
     prompt = PromptTemplate(template=cleaned_prompt, input_variables=input_variables)
-    print(input_variables)
-
     llm_chain = LLMChain(llm=llm, prompt=prompt)
 
-    print(llm_chain.run(**inputs))
+    output = llm_chain.run(**inputs)
 
-    return jsonify({"status": "OK"})
+    return jsonify({"output": output})
