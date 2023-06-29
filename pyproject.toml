@@ -10,6 +10,8 @@ python = "^3.11"
 langchain = "^0.0.219"
 Flask = "^2.3.2"
 flask-cors = "^4.0.0"
+python-dotenv = "^1.0.0"
+openai = "^0.27.8"
 
 
 [build-system]
