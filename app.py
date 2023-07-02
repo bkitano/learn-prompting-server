@@ -15,9 +15,8 @@ CORS(app, resources={r"/*": {"origins": "*"}})  # allows all origins to make cal
 
 
 # Home page
-@app.route("/api/v1/check", methods=["POST"])
+@app.route("/api/v1/check", methods=["GET"])
 def check():
-    print(request.json)
     return jsonify({"status": "OK"})
 
 
