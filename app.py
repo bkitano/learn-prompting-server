@@ -1,3 +1,6 @@
+import mailchimp_marketing as MailchimpMarketing
+from mailchimp_marketing.api_client import ApiClientError
+
 from langchain import LLMChain
 from langchain.llms import OpenAI
 from langchain.prompts import PromptTemplate
@@ -8,7 +11,7 @@ import os
 from utils.parseRawPromptForInput import parseRawPromptForInputVariables
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "*"}}) # allows all origins to make calls
+CORS(app, resources={r"/*": {"origins": "*"}})  # allows all origins to make calls
 
 
 # Home page
@@ -43,6 +46,25 @@ def batch():
     ]
 
     return jsonify({"completions": response})
+
+
+@app.route("/api/v1/subscribe", methods=["POST"])
+def subscribe():
+    email = request.json.get("email")
+    try:
+        client = MailchimpMarketing.Client()
+        client.set_config(
+            {"api_key": os.environ.get("MAILCHIMP_API_KEY"), "server": "us21"}
+        )
+
+        response = client.lists.add_list_member(
+            "82047d0618",
+            {"email_address": email, "status": "subscribed"},
+        )
+        return jsonify({"status": "OK"})
+    except ApiClientError as error:
+        print("Error: {}".format(error.text))
+        return jsonify({"status": "error", "message": error.text})
 
 
 @app.route("/api/v1/submit", methods=["POST"])
