@@ -3,6 +3,7 @@ from mailchimp_marketing.api_client import ApiClientError
 
 from langchain import LLMChain
 from langchain.llms import OpenAI
+from langchain.chat_models import ChatOpenAI
 from langchain.prompts import PromptTemplate
 from flask import Flask, request, jsonify
 from flask_cors import CORS
@@ -12,6 +13,9 @@ from utils.parseRawPromptForInput import parseRawPromptForInputVariables
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})  # allows all origins to make calls
+llm = ChatOpenAI(
+    openai_api_key=os.environ.get("OPENAI_API_KEY"), model="gpt-3.5-turbo-0613"
+)
 
 
 # Home page
@@ -22,7 +26,6 @@ def check():
 
 @app.route("/api/v1/batch", methods=["POST"])
 def batch():
-    llm = OpenAI(openai_api_key=os.environ.get("OPENAI_API_KEY"))
     raw_prompt = request.json.get("prompt")
 
     """
@@ -68,7 +71,6 @@ def subscribe():
 
 @app.route("/api/v1/submit", methods=["POST"])
 def submit():
-    llm = OpenAI(openai_api_key=os.environ.get("OPENAI_API_KEY"))
     raw_prompt = request.json.get("prompt")
 
     """
